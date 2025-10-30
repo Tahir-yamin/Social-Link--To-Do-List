@@ -16,4 +16,4 @@ jobs:
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push --force https://Tahir-yamin:$HF_TOKEN@https://huggingface.co/spaces/tahiryamin/LinkLoom_1 main
+        run: git push --force https://Tahir-yamin:$HF_TOKEN@huggingface.co/spaces/tahiryamin/LinkLoom_1 main
