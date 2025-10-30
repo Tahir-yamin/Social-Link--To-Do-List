@@ -1,0 +1,5 @@
+{
+  "name": "LinkLoom",
+  "description": "An intelligent to-do list for your saved links. Automatically fetch titles and summaries for your links and track their completion status, helping you organize and tackle your online reading list and shared content.",
+  "requestFramePermissions": []
+}
