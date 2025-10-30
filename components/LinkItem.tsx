@@ -70,13 +70,25 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
   };
   
   const StatusIndicator = () => {
+    let icon;
+    let containerClasses;
+
     if (isError) {
-      return <ExclamationCircleIcon className="w-5 h-5 text-slate-400 dark:text-slate-500" title="Error" />;
+        icon = <ExclamationCircleIcon className="w-4 h-4 text-white" title="Error" />;
+        containerClasses = 'bg-slate-400 dark:bg-slate-500';
+    } else if (isDone) {
+        icon = <CheckCircleIcon className="w-4 h-4 text-white" title="Done" />;
+        containerClasses = 'bg-green-500';
+    } else { // Pending
+        icon = <ClockIcon className="w-4 h-4 text-white" title="Pending" />;
+        containerClasses = 'bg-orange-500';
     }
-    if (isDone) {
-      return <CheckCircleIcon className="w-5 h-5 text-green-500" title="Done" />;
-    }
-    return <ClockIcon className="w-5 h-5 text-orange-500" title="Pending" />;
+
+    return (
+        <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${containerClasses}`}>
+            {icon}
+        </div>
+    );
   };
   
   const StatusToggleButton = () => (
