@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, LinkStatus } from '../types';
-import { TrashIcon, ExternalLinkIcon, EditIcon, SaveIcon, CancelIcon, TagIcon, WebIcon, SparklesIcon, ChevronDownIcon, ClockIcon, CheckCircleIcon, ExclamationCircleIcon } from './icons';
+import { TrashIcon, ExternalLinkIcon, EditIcon, SaveIcon, CancelIcon, TagIcon, WebIcon, SparklesIcon, ChevronDownIcon, ClockIcon, CheckCircleIcon, ExclamationCircleIcon, CalendarIcon } from './icons';
 import Spinner from './Spinner';
 
 interface LinkItemProps {
@@ -21,6 +21,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
   const [editedTitle, setEditedTitle] = useState(link.title);
   const [editedSummary, setEditedSummary] = useState(link.summary);
   const [editedCategory, setEditedCategory] = useState(link.category);
+  const [editedDueDate, setEditedDueDate] = useState(link.dueDate ? new Date(link.dueDate).toISOString().split('T')[0] : '');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const isDone = link.status === LinkStatus.DONE;
@@ -47,6 +48,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
     setEditedTitle(link.title); // Reset changes
     setEditedSummary(link.summary);
     setEditedCategory(link.category);
+    setEditedDueDate(link.dueDate ? new Date(link.dueDate).toISOString().split('T')[0] : '');
   };
 
   const handleSave = () => {
@@ -64,7 +66,8 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
     onUpdateLink(link.id, { 
         title: editedTitle.trim(), 
         summary: editedSummary.trim(),
-        category: newCategory 
+        category: newCategory,
+        dueDate: editedDueDate ? new Date(editedDueDate).getTime() : undefined,
     });
     setIsEditing(false);
   };
@@ -144,19 +147,31 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
             aria-label="Edit summary"
             rows={3}
           />
-          <div className="relative">
-            <TagIcon className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              value={editedCategory}
-              onChange={(e) => setEditedCategory(e.target.value)}
-              className={`${commonInputStyles} pl-8`}
-              aria-label="Edit category"
-              list="category-suggestions"
-            />
-            <datalist id="category-suggestions">
-                {categories.map(cat => <option key={cat} value={cat} />)}
-            </datalist>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <div className="relative flex-grow">
+                <TagIcon className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                type="text"
+                value={editedCategory}
+                onChange={(e) => setEditedCategory(e.target.value)}
+                className={`${commonInputStyles} pl-8`}
+                aria-label="Edit category"
+                list="category-suggestions"
+                />
+                <datalist id="category-suggestions">
+                    {categories.map(cat => <option key={cat} value={cat} />)}
+                </datalist>
+            </div>
+            <div className="relative flex-grow">
+                <CalendarIcon className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                    type="date"
+                    value={editedDueDate}
+                    onChange={(e) => setEditedDueDate(e.target.value)}
+                    className={`${commonInputStyles} pl-8`}
+                    aria-label="Edit due date"
+                />
+            </div>
           </div>
         </div>
         <div className="flex-shrink-0 pt-1 flex flex-col gap-3">
@@ -216,6 +231,12 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
                             <TagIcon className="w-3 h-3"/>
                             <span>{link.category}</span>
                         </div>
+                        )}
+                        {link.dueDate && (
+                             <div className={`flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 dark:bg-slate-600 dark:text-slate-300`}>
+                                <CalendarIcon className="w-3 h-3"/>
+                                <span>{new Date(link.dueDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                            </div>
                         )}
                     </div>
                 </div>

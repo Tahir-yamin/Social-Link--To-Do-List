@@ -87,7 +87,8 @@ const FilterControls: React.FC<FilterControlsProps> = ({
                 onChange={handleSortKeyChange}
                 className="text-sm rounded-md border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 focus:ring-indigo-500 focus:border-indigo-500"
             >
-                <option value="createdAt">Date</option>
+                <option value="createdAt">Date Added</option>
+                <option value="dueDate">Due Date</option>
                 <option value="title">Title</option>
                 <option value="status">Status</option>
             </select>

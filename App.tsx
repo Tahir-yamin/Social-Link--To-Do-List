@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link, LinkStatus, SortConfig } from './types';
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { useDarkMode } from './hooks/useDarkMode';
 import Header from './components/Header';
 import AddLinkForm from './components/AddLinkForm';
 import LinkList from './components/LinkList';
@@ -23,6 +24,7 @@ const App: React.FC = () => {
   const [isCategoryManagerOpen, setIsCategoryManagerOpen] = useState(false);
   const [analyzingLinkId, setAnalyzingLinkId] = useState<string | null>(null);
   const [selectedLinkIds, setSelectedLinkIds] = useState(new Set<string>());
+  const [theme, setTheme] = useDarkMode();
 
 
   // Handle incoming shares from PWA share target
@@ -66,6 +68,14 @@ const App: React.FC = () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+  
+  // Update meta theme-color on theme change for PWA
+  useEffect(() => {
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', theme === 'dark' ? '#0f172a' : '#6366f1');
+    }
+  }, [theme]);
 
 
   const handleAddLink = (newLink: Omit<Link, 'id' | 'status' | 'createdAt'>) => {
@@ -266,6 +276,14 @@ const App: React.FC = () => {
           // PENDING is "less than" DONE
           if (a.status === b.status) return 0;
           return (a.status === LinkStatus.PENDING ? -1 : 1) * order;
+        case 'dueDate':
+          if (!a.dueDate && !b.dueDate) return 0;
+          if (a.dueDate && !b.dueDate) return -1 * order; // items with due dates come first
+          if (!a.dueDate && b.dueDate) return 1 * order;
+          if (a.dueDate && b.dueDate) {
+            return (a.dueDate - b.dueDate) * order;
+          }
+          return 0;
         default:
           return 0;
       }
@@ -283,7 +301,11 @@ const App: React.FC = () => {
     <>
       <div className="min-h-screen font-sans text-slate-800 dark:text-slate-200">
         <div className="container mx-auto max-w-3xl p-4 md:p-8 pb-24">
-          <Header onManageCategories={() => setIsCategoryManagerOpen(true)} />
+          <Header 
+            onManageCategories={() => setIsCategoryManagerOpen(true)}
+            theme={theme}
+            setTheme={setTheme}
+          />
           <main>
             {isProcessingSharedLink && (
               <div className="fixed top-0 left-0 right-0 z-50 flex justify-center p-4 bg-indigo-600 text-white shadow-lg animate-pulse">
