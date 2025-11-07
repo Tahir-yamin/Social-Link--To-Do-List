@@ -12,7 +12,12 @@ const jsonRegex = /```json\n([\s\S]*?)\n```|({[\s\S]*})/;
 
 export const fetchLinkMetadata = async (url: string): Promise<LinkMetadata> => {
   if (!process.env.API_KEY) {
-    throw new Error("API_KEY environment variable not set");
+    return {
+      title: "Feature Unavailable in Live Demo",
+      summary: "This feature, which uses AI to automatically summarize and categorize links, is disabled in the live demo because it requires a secret API key.",
+      category: "Demo",
+      sources: [],
+    };
   }
   
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -62,7 +67,13 @@ Respond with ONLY a valid JSON object in the following format: {"title": "...", 
 
 export const fetchDeepAnalysis = async (url: string): Promise<string> => {
     if (!process.env.API_KEY) {
-        throw new Error("API_KEY environment variable not set");
+        return `
+### Feature Unavailable in Live Demo
+
+**Deep analysis is an AI-powered feature that is disabled on this live demo site.**
+
+This feature requires a secret API key to connect to the generative AI service. For security reasons, this key cannot be exposed in a public application. To use this feature, please run the application in a local development environment with your own API key.
+`;
     }
 
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
