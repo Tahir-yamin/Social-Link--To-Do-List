@@ -11,20 +11,13 @@ const jsonRegex = /```json\n([\s\S]*?)\n```|({[\s\S]*})/;
 
 
 export const fetchLinkMetadata = async (url: string): Promise<LinkMetadata> => {
-  // If the API_KEY is not set (e.g., in a live demo environment),
-  // return a user-friendly fallback object immediately.
   if (!process.env.API_KEY) {
-    return {
-      title: "Feature Unavailable in Live Demo",
-      summary: "This feature, which uses AI to automatically summarize and categorize links, is disabled in the live demo because it requires a secret API key.",
-      category: "Demo",
-      sources: [],
-    };
+    throw new Error("API_KEY environment variable not set");
   }
 
-  // Only proceed with AI-related logic if the API key exists.
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const prompt = `Based on the content of the URL provided, generate a concise title, a one-sentence summary, and a single, relevant category (e.g., Technology, News, Productivity, Lifestyle, Programming).
 URL: ${url}
 Respond with ONLY a valid JSON object in the following format: {"title": "...", "summary": "...", "category": "..."}. Do not include any other text, just the JSON.`;
@@ -56,7 +49,7 @@ Respond with ONLY a valid JSON object in the following format: {"title": "...", 
     return { ...metadata, sources };
   } catch (error) {
     console.error("Error fetching link metadata from Gemini API:", error);
-    // Fallback in case of an API error during the request
+    // Fallback in case of API error
     return {
       title: "Unable to Access Document Content",
       summary: `Could not fetch a summary for ${url}. The content might be inaccessible or require a login.`,
@@ -68,20 +61,13 @@ Respond with ONLY a valid JSON object in the following format: {"title": "...", 
 
 
 export const fetchDeepAnalysis = async (url: string): Promise<string> => {
-    // If the API_KEY is not set, return the fallback message immediately.
     if (!process.env.API_KEY) {
-        return `
-### Feature Unavailable in Live Demo
-
-**Deep analysis is an AI-powered feature that is disabled on this live demo site.**
-
-This feature requires a secret API key to connect to the generative AI service. For security reasons, this key cannot be exposed in a public application. To use this feature, please run the application in a local development environment with your own API key.
-`;
+        throw new Error("API_KEY environment variable not set");
     }
 
-    // Only proceed with AI-related logic if the API key exists.
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
     try {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
         const prompt = `Provide a detailed, in-depth analysis of the content at this URL: ${url}. Break down the key arguments, identify the main takeaways, and explain any complex concepts simply. Format your response using markdown for readability.`;
         
         const response = await ai.models.generateContent({
