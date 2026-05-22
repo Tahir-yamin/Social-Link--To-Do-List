@@ -171,38 +171,43 @@ const App: React.FC = () => {
   // Category Management Handlers
   const handleAddCategory = (name: string) => {
     const newCategory = name.trim();
-    if (newCategory && !categories.find(c => c.toLowerCase() === newCategory.toLowerCase())) {
+    const lowerNewCategory = newCategory.toLowerCase();
+    if (newCategory && !categories.find(c => c.toLowerCase() === lowerNewCategory)) {
         setCategories(prev => [...prev, newCategory].sort());
     }
   };
 
   const handleUpdateCategory = (oldName: string, newName: string) => {
     const trimmedNewName = newName.trim();
-    if (!trimmedNewName || oldName.toLowerCase() === trimmedNewName.toLowerCase()) return;
-    if (categories.find(c => c.toLowerCase() === trimmedNewName.toLowerCase())) {
+    const lowerNewName = trimmedNewName.toLowerCase();
+    const lowerOldName = oldName.toLowerCase();
+
+    if (!trimmedNewName || lowerOldName === lowerNewName) return;
+    if (categories.find(c => c.toLowerCase() === lowerNewName)) {
         alert(`Category "${trimmedNewName}" already exists.`);
         return;
     }
     
     // Update links
     setLinks(prevLinks => prevLinks.map(link => 
-        link.category.toLowerCase() === oldName.toLowerCase() ? { ...link, category: trimmedNewName } : link
+        link.category.toLowerCase() === lowerOldName ? { ...link, category: trimmedNewName } : link
     ));
 
     // Update category list
-    setCategories(prev => prev.map(c => c.toLowerCase() === oldName.toLowerCase() ? trimmedNewName : c).sort());
+    setCategories(prev => prev.map(c => c.toLowerCase() === lowerOldName ? trimmedNewName : c).sort());
   };
 
   const handleDeleteCategory = (name: string) => {
-    if (name.toLowerCase() === 'uncategorized') return;
+    const lowerName = name.toLowerCase();
+    if (lowerName === 'uncategorized') return;
 
     // Re-assign links to 'Uncategorized'
     setLinks(prevLinks => prevLinks.map(link => 
-        link.category.toLowerCase() === name.toLowerCase() ? { ...link, category: 'Uncategorized' } : link
+        link.category.toLowerCase() === lowerName ? { ...link, category: 'Uncategorized' } : link
     ));
 
     // Remove from category list
-    setCategories(prev => prev.filter(c => c.toLowerCase() !== name.toLowerCase()));
+    setCategories(prev => prev.filter(c => c.toLowerCase() !== lowerName));
   };
   
   // Selection Handlers
