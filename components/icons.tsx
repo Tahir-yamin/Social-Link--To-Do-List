@@ -46,12 +46,11 @@ export const EditIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const SaveIcon: React.FC<IconProps> = ({ title, ...props }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
-        {title && <title>{title}</title>}
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-    </svg>
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+    {title && <title>{title}</title>}
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+  </svg>
 );
 
 // FIX: Destructure `title` from props and render a <title> element if it exists.
