@@ -1,12 +1,9 @@
 import React from 'react';
 
-// FIX: Update IconProps to explicitly include an optional `title` prop.
-// This resolves TypeScript errors when passing a title and improves accessibility by allowing a <title> element inside the SVG.
 type IconProps = React.SVGProps<SVGSVGElement> & {
   title?: string;
 };
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const PlusIcon: React.FC<IconProps> = ({ title, ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
     {title && <title>{title}</title>}
@@ -14,7 +11,6 @@ export const PlusIcon: React.FC<IconProps> = ({ title, ...props }) => (
   </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const LinkIcon: React.FC<IconProps> = ({ title, ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
     {title && <title>{title}</title>}
@@ -22,7 +18,6 @@ export const LinkIcon: React.FC<IconProps> = ({ title, ...props }) => (
   </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const TrashIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -30,7 +25,6 @@ export const TrashIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const ExternalLinkIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -38,7 +32,6 @@ export const ExternalLinkIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const EditIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -46,7 +39,6 @@ export const EditIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const SaveIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -54,7 +46,6 @@ export const SaveIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const CancelIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -62,7 +53,6 @@ export const CancelIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const ArrowUpIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -70,7 +60,6 @@ export const ArrowUpIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const ArrowDownIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -78,7 +67,6 @@ export const ArrowDownIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const TagIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -87,7 +75,6 @@ export const TagIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const CogIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
       {title && <title>{title}</title>}
@@ -95,7 +82,6 @@ export const CogIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const SparklesIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -103,7 +89,6 @@ export const SparklesIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const WebIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -113,7 +98,6 @@ export const WebIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const ChevronDownIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -121,7 +105,6 @@ export const ChevronDownIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const ChartBarIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
       {title && <title>{title}</title>}
@@ -129,7 +112,6 @@ export const ChartBarIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const CheckCircleIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -137,7 +119,6 @@ export const CheckCircleIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const ClockIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -145,7 +126,6 @@ export const ClockIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const ExclamationCircleIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -153,7 +133,6 @@ export const ExclamationCircleIcon: React.FC<IconProps> = ({ title, ...props }) 
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const SunIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
@@ -161,7 +140,6 @@ export const SunIcon: React.FC<IconProps> = ({ title, ...props }) => (
     </svg>
 );
 
-// FIX: Destructure `title` from props and render a <title> element if it exists.
 export const MoonIcon: React.FC<IconProps> = ({ title, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         {title && <title>{title}</title>}
