@@ -17,15 +17,16 @@ interface LinkItemProps {
 }
 
 const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAnalyzing, onToggleSelection, onToggleStatus, onDeleteLink, onUpdateLink, onAddCategory, onDeepAnalysis }) => {
+  const { id, url, title, summary, category, status, dueDate, sources } = link;
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(link.title);
-  const [editedSummary, setEditedSummary] = useState(link.summary);
-  const [editedCategory, setEditedCategory] = useState(link.category);
-  const [editedDueDate, setEditedDueDate] = useState(link.dueDate ? new Date(link.dueDate).toISOString().split('T')[0] : '');
+  const [editedTitle, setEditedTitle] = useState(title);
+  const [editedSummary, setEditedSummary] = useState(summary);
+  const [editedCategory, setEditedCategory] = useState(category);
+  const [editedDueDate, setEditedDueDate] = useState(dueDate ? new Date(dueDate).toISOString().split('T')[0] : '');
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const isDone = link.status === LinkStatus.DONE;
-  const isError = link.category === 'Error';
+  const isDone = status === LinkStatus.DONE;
+  const isError = category === 'Error';
 
   let statusBorderClass = 'border-transparent';
   if (isError) {
@@ -45,10 +46,10 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
 
   const handleCancel = () => {
     setIsEditing(false);
-    setEditedTitle(link.title); // Reset changes
-    setEditedSummary(link.summary);
-    setEditedCategory(link.category);
-    setEditedDueDate(link.dueDate ? new Date(link.dueDate).toISOString().split('T')[0] : '');
+    setEditedTitle(title); // Reset changes
+    setEditedSummary(summary);
+    setEditedCategory(category);
+    setEditedDueDate(dueDate ? new Date(dueDate).toISOString().split('T')[0] : '');
   };
 
   const handleSave = () => {
@@ -63,7 +64,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
         onAddCategory(newCategory);
     }
 
-    onUpdateLink(link.id, { 
+    onUpdateLink(id, {
         title: editedTitle.trim(), 
         summary: editedSummary.trim(),
         category: newCategory,
@@ -96,7 +97,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
   
   const StatusToggleButton = () => (
      <button
-        onClick={(e) => { e.stopPropagation(); onToggleStatus(link.id); }}
+        onClick={(e) => { e.stopPropagation(); onToggleStatus(id); }}
         className="text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 focus:outline-none focus:text-indigo-500 transition-colors disabled:opacity-50"
         aria-label={`Mark as ${isDone ? 'pending' : 'done'}`}
         disabled={isAnalyzing}
@@ -178,14 +179,14 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
           <button
             onClick={handleSave}
             className="text-slate-400 hover:text-green-500 dark:hover:text-green-400 focus:outline-none focus:text-green-500 transition-colors"
-            aria-label={`Save changes for link: ${link.title}`}
+            aria-label={`Save changes for link: ${title}`}
           >
             <SaveIcon className="w-5 h-5" />
           </button>
           <button
             onClick={handleCancel}
             className="text-slate-400 hover:text-red-500 dark:hover:text-red-400 focus:outline-none focus:text-red-500 transition-colors"
-            aria-label={`Cancel editing link: ${link.title}`}
+            aria-label={`Cancel editing link: ${title}`}
           >
             <CancelIcon className="w-5 h-5" />
           </button>
@@ -200,9 +201,9 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
         <input
           type="checkbox"
           checked={isSelected}
-          onChange={() => onToggleSelection(link.id)}
+          onChange={() => onToggleSelection(id)}
           className="h-6 w-6 rounded border-slate-300 dark:border-slate-600 text-indigo-600 focus:ring-indigo-500 bg-slate-100 dark:bg-slate-900"
-          aria-label={`Select link: "${link.title}"`}
+          aria-label={`Select link: "${title}"`}
         />
       </div>
       <div className="flex-grow overflow-hidden">
@@ -218,7 +219,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
                         <div className="flex items-center gap-3">
                             <StatusIndicator />
                             <h3 className={`text-lg font-semibold text-slate-800 dark:text-slate-100 transition-colors ${isDone ? 'line-through text-slate-400 dark:text-slate-500' : ''}`}>
-                                {link.title}
+                                {title}
                             </h3>
                             {isAnalyzing && (
                                 <div className="text-indigo-500" title="Analyzing...">
@@ -226,16 +227,16 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
                                 </div>
                             )}
                         </div>
-                        {link.category && (
+                        {category && (
                         <div className={`flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full ${categoryTagClasses}`}>
                             <TagIcon className="w-3 h-3"/>
-                            <span>{link.category}</span>
+                            <span>{category}</span>
                         </div>
                         )}
-                        {link.dueDate && (
+                        {dueDate && (
                              <div className={`flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 dark:bg-slate-600 dark:text-slate-300`}>
                                 <CalendarIcon className="w-3 h-3"/>
-                                <span>{new Date(link.dueDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                                <span>{new Date(dueDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                             </div>
                         )}
                     </div>
@@ -245,13 +246,13 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
                 </div>
             </div>
             <a
-            href={link.url}
+            href={url}
             target="_blank"
             rel="noopener noreferrer"
             onClick={e => e.stopPropagation()}
             className={`flex items-center gap-1.5 text-sm text-indigo-500 hover:text-indigo-700 dark:hover:text-indigo-400 truncate transition-colors ${isDone ? 'text-slate-400 dark:text-slate-500 hover:text-slate-400 dark:hover:text-slate-500' : ''}`}
             >
-            <span className="truncate">{link.url}</span>
+            <span className="truncate">{url}</span>
             <ExternalLinkIcon className="w-4 h-4 flex-shrink-0" />
             </a>
         </div>
@@ -259,17 +260,17 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
         {isExpanded && (
             <div className="mt-2 animate-fade-in">
                 <p className={`mt-1 text-slate-600 dark:text-slate-400 transition-colors whitespace-pre-wrap ${isDone ? 'text-slate-400 dark:text-slate-500' : ''}`}>
-                {link.summary}
+                {summary}
                 </p>
 
-                {link.sources && link.sources.length > 0 && (
+                {sources && sources.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
                     <h4 className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
                     <WebIcon className="w-4 h-4" />
                     SOURCES
                     </h4>
                     <ul className="list-disc list-inside space-y-1">
-                    {link.sources.map((source, index) => (
+                    {sources.map((source, index) => (
                         <li key={index} className="text-sm">
                         <a href={source.uri} target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline truncate" title={source.uri}>
                             {source.title || new URL(source.uri).hostname}
@@ -287,23 +288,23 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
         <button
           onClick={(e) => { e.stopPropagation(); handleEdit(); }}
           className="text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 focus:outline-none focus:text-indigo-500 transition-colors disabled:opacity-50"
-          aria-label={`Edit link: ${link.title}`}
+          aria-label={`Edit link: ${title}`}
           disabled={isAnalyzing}
         >
           <EditIcon className="w-5 h-5" />
         </button>
         <button
-          onClick={(e) => { e.stopPropagation(); onDeepAnalysis(link.id); }}
+          onClick={(e) => { e.stopPropagation(); onDeepAnalysis(id); }}
           className="text-slate-400 hover:text-purple-500 dark:hover:text-purple-400 focus:outline-none focus:text-purple-500 transition-colors disabled:opacity-50"
-          aria-label={`Analyze deeper: ${link.title}`}
+          aria-label={`Analyze deeper: ${title}`}
           disabled={isAnalyzing}
         >
             <SparklesIcon className="w-5 h-5" />
         </button>
         <button
-          onClick={(e) => { e.stopPropagation(); onDeleteLink(link.id); }}
+          onClick={(e) => { e.stopPropagation(); onDeleteLink(id); }}
           className="text-slate-400 hover:text-red-500 dark:hover:text-red-400 focus:outline-none focus:text-red-500 transition-colors disabled:opacity-50"
-          aria-label={`Delete link: ${link.title}`}
+          aria-label={`Delete link: ${title}`}
           disabled={isAnalyzing}
         >
           <TrashIcon className="w-5 h-5" />
