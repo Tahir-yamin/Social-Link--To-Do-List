@@ -13,7 +13,7 @@ interface LinkListProps {
   onDeleteLink: (id: string) => void;
   onUpdateLink: (id: string, updates: Partial<Omit<Link, 'id' | 'url' | 'createdAt'>>) => void;
   onAddCategory: (name: string) => void;
-  onDeepAnalysis: (id: string) => void;
+  onDeepAnalysis: (id: string, url: string) => void;
 }
 
 const LinkList: React.FC<LinkListProps> = ({ 

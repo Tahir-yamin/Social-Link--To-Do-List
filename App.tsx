@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Link, LinkStatus, SortConfig } from './types';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useDarkMode } from './hooks/useDarkMode';
@@ -78,7 +78,19 @@ const App: React.FC = () => {
   }, [theme]);
 
 
-  const handleAddLink = (newLink: Omit<Link, 'id' | 'status' | 'createdAt'>) => {
+  // Category Management Handlers
+  const handleAddCategory = useCallback((name: string) => {
+    const newCategory = name.trim();
+    if (!newCategory) return;
+    setCategories(prev => {
+        if (prev.find(c => c.toLowerCase() === newCategory.toLowerCase())) {
+            return prev;
+        }
+        return [...prev, newCategory].sort();
+    });
+  }, [setCategories]);
+
+  const handleAddLink = useCallback((newLink: Omit<Link, 'id' | 'status' | 'createdAt'>) => {
     const linkToAdd: Link = {
       ...newLink,
       id: crypto.randomUUID(),
@@ -86,12 +98,16 @@ const App: React.FC = () => {
       createdAt: Date.now(),
     };
     // Prevent adding duplicates, especially from sharing
-    if (!links.some(link => link.url === linkToAdd.url)) {
-        setLinks(prevLinks => [linkToAdd, ...prevLinks]);
-        // Add new category if it doesn't exist
-        handleAddCategory(linkToAdd.category);
-    }
-  };
+    setLinks(prevLinks => {
+        if (prevLinks.some(link => link.url === linkToAdd.url)) {
+            console.log("Link already exists.");
+            return prevLinks;
+        }
+        return [linkToAdd, ...prevLinks];
+    });
+    // Add new category if it doesn't exist
+    handleAddCategory(linkToAdd.category);
+  }, [setLinks, handleAddCategory]);
 
   const handleSharedLink = async (url: string) => {
     if (links.some(link => link.url === url)) {
@@ -118,7 +134,7 @@ const App: React.FC = () => {
     }
   };
 
-  const handleToggleStatus = (id: string) => {
+  const handleToggleStatus = useCallback((id: string) => {
     setLinks(prevLinks =>
       prevLinks.map(link =>
         link.id === id
@@ -126,18 +142,18 @@ const App: React.FC = () => {
           : link
       )
     );
-  };
+  }, [setLinks]);
 
-  const handleDeleteLink = (id: string) => {
+  const handleDeleteLink = useCallback((id: string) => {
     setLinks(prevLinks => prevLinks.filter(link => link.id !== id));
     setSelectedLinkIds(prev => {
         const newSet = new Set(prev);
         newSet.delete(id);
         return newSet;
     });
-  };
+  }, [setLinks, setSelectedLinkIds]);
 
-  const handleUpdateLink = (id: string, updates: Partial<Omit<Link, 'id' | 'url' | 'createdAt'>>) => {
+  const handleUpdateLink = useCallback((id: string, updates: Partial<Omit<Link, 'id' | 'url' | 'createdAt'>>) => {
     setLinks(prevLinks =>
       prevLinks.map(link =>
         link.id === id ? { ...link, ...updates } : link
@@ -146,15 +162,12 @@ const App: React.FC = () => {
     if(updates.category){
       handleAddCategory(updates.category);
     }
-  };
+  }, [setLinks, handleAddCategory]);
   
-  const handleDeepAnalysis = async (linkId: string) => {
-    const linkToAnalyze = links.find(link => link.id === linkId);
-    if (!linkToAnalyze) return;
-
+  const handleDeepAnalysis = useCallback(async (linkId: string, url: string) => {
     setAnalyzingLinkId(linkId);
     try {
-      const deepSummary = await fetchDeepAnalysis(linkToAnalyze.url);
+      const deepSummary = await fetchDeepAnalysis(url);
       handleUpdateLink(linkId, { summary: deepSummary });
     } catch (error) {
       console.error("Deep analysis failed:", error);
@@ -162,20 +175,12 @@ const App: React.FC = () => {
     } finally {
       setAnalyzingLinkId(null);
     }
-  };
+  }, [handleUpdateLink]);
 
-  const handleClearCompleted = () => {
+  const handleClearCompleted = useCallback(() => {
     setLinks(prevLinks => prevLinks.filter(link => link.status !== LinkStatus.DONE));
-  };
+  }, [setLinks]);
   
-  // Category Management Handlers
-  const handleAddCategory = (name: string) => {
-    const newCategory = name.trim();
-    if (newCategory && !categories.find(c => c.toLowerCase() === newCategory.toLowerCase())) {
-        setCategories(prev => [...prev, newCategory].sort());
-    }
-  };
-
   const handleUpdateCategory = (oldName: string, newName: string) => {
     const trimmedNewName = newName.trim();
     if (!trimmedNewName || oldName.toLowerCase() === trimmedNewName.toLowerCase()) return;
@@ -206,7 +211,7 @@ const App: React.FC = () => {
   };
   
   // Selection Handlers
-  const handleToggleSelection = (id: string) => {
+  const handleToggleSelection = useCallback((id: string) => {
     setSelectedLinkIds(prev => {
         const newSet = new Set(prev);
         if (newSet.has(id)) {
@@ -216,24 +221,24 @@ const App: React.FC = () => {
         }
         return newSet;
     });
-  };
+  }, [setSelectedLinkIds]);
 
-  const handleClearSelection = () => setSelectedLinkIds(new Set());
+  const handleClearSelection = useCallback(() => setSelectedLinkIds(new Set()), [setSelectedLinkIds]);
   
-  const handleToggleSelectAll = (visibleLinkIds: string[]) => {
-    const allVisibleSelected = visibleLinkIds.every(id => selectedLinkIds.has(id));
-    if (allVisibleSelected) {
-        // Deselect all visible
-        setSelectedLinkIds(prev => {
-            const newSet = new Set(prev);
+  const handleToggleSelectAll = useCallback((visibleLinkIds: string[]) => {
+    setSelectedLinkIds(prev => {
+        const allVisibleSelected = visibleLinkIds.every(id => prev.has(id));
+        const newSet = new Set(prev);
+        if (allVisibleSelected) {
+            // Deselect all visible
             visibleLinkIds.forEach(id => newSet.delete(id));
-            return newSet;
-        });
-    } else {
-        // Select all visible
-        setSelectedLinkIds(prev => new Set([...prev, ...visibleLinkIds]));
-    }
-  };
+        } else {
+            // Select all visible
+            visibleLinkIds.forEach(id => newSet.add(id));
+        }
+        return newSet;
+    });
+  }, [setSelectedLinkIds]);
 
   const handleBulkAction = (action: 'delete' | 'setStatus' | 'setCategory', payload?: any) => {
     if (action === 'delete') {
