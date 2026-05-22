@@ -42,9 +42,12 @@ Respond with ONLY a valid JSON object in the following format: {"title": "...", 
     }
     
     const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? [];
-    const sources = groundingChunks
-      .map(chunk => chunk.web && chunk.web.uri && chunk.web.title ? { uri: chunk.web.uri, title: chunk.web.title } : null)
-      .filter((source): source is { uri: string; title: string; } => source !== null);
+    const sources = groundingChunks.reduce<{ uri: string; title: string; }[]>((acc, chunk) => {
+      if (chunk.web && chunk.web.uri && chunk.web.title) {
+        acc.push({ uri: chunk.web.uri, title: chunk.web.title });
+      }
+      return acc;
+    }, []);
 
     return { ...metadata, sources };
   } catch (error) {
