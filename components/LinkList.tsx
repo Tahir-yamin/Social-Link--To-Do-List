@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { Link } from '../types';
 import LinkItem from './LinkItem';
 
@@ -30,15 +30,15 @@ const LinkList: React.FC<LinkListProps> = ({
     onDeepAnalysis 
 }) => {
   const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
-  const visibleLinkIds = links.map(link => link.id);
-  const selectedVisibleCount = visibleLinkIds.filter(id => selectedLinkIds.has(id)).length;
+  const visibleLinkIds = useMemo(() => links.map(link => link.id), [links]);
+  const selectedVisibleCount = useMemo(() => visibleLinkIds.filter(id => selectedLinkIds.has(id)).length, [visibleLinkIds, selectedLinkIds]);
 
   useEffect(() => {
     if (selectAllCheckboxRef.current) {
         selectAllCheckboxRef.current.checked = selectedVisibleCount > 0 && selectedVisibleCount === visibleLinkIds.length;
         selectAllCheckboxRef.current.indeterminate = selectedVisibleCount > 0 && selectedVisibleCount < visibleLinkIds.length;
     }
-  }, [selectedVisibleCount, visibleLinkIds.length]);
+  }, [selectedVisibleCount, visibleLinkIds]);
   
 
   if (links.length === 0) {
