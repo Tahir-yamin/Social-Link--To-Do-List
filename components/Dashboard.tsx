@@ -19,7 +19,6 @@ const Dashboard: React.FC<DashboardProps> = ({ links }) => {
             return acc;
         }, {} as Record<string, number>);
 
-        // FIX: Replaced destructuring in sort with index access to fix type inference issues.
         const sortedCategories = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]);
 
         return { total, pending, completed, sortedCategories };
