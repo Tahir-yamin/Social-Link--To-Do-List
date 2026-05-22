@@ -290,7 +290,9 @@ const App: React.FC = () => {
     });
   }, [links, filter, categoryFilter, sortConfig]);
   
-  const completedCount = useMemo(() => links.filter(link => link.status === LinkStatus.DONE).length, [links]);
+  const completedCount = useMemo(() => links.reduce((count, link) =>
+    link.status === LinkStatus.DONE ? count + 1 : count, 0
+  ), [links]);
   
   // Clear selection when filters change to avoid confusion
   useEffect(() => {
