@@ -13,10 +13,10 @@ interface LinkItemProps {
   onDeleteLink: (id: string) => void;
   onUpdateLink: (id: string, updates: Partial<Omit<Link, 'id' | 'url' | 'createdAt'>>) => void;
   onAddCategory: (name: string) => void;
-  onDeepAnalysis: (id: string) => void;
+  onDeepAnalysis: (id: string, url: string) => void;
 }
 
-const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAnalyzing, onToggleSelection, onToggleStatus, onDeleteLink, onUpdateLink, onAddCategory, onDeepAnalysis }) => {
+const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, categories, isSelected, isAnalyzing, onToggleSelection, onToggleStatus, onDeleteLink, onUpdateLink, onAddCategory, onDeepAnalysis }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(link.title);
   const [editedSummary, setEditedSummary] = useState(link.summary);
@@ -293,7 +293,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
           <EditIcon className="w-5 h-5" />
         </button>
         <button
-          onClick={(e) => { e.stopPropagation(); onDeepAnalysis(link.id); }}
+          onClick={(e) => { e.stopPropagation(); onDeepAnalysis(link.id, link.url); }}
           className="text-slate-400 hover:text-purple-500 dark:hover:text-purple-400 focus:outline-none focus:text-purple-500 transition-colors disabled:opacity-50"
           aria-label={`Analyze deeper: ${link.title}`}
           disabled={isAnalyzing}
@@ -311,6 +311,6 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, categories, isSelected, isAna
       </div>
     </li>
   );
-};
+});
 
 export default LinkItem;
