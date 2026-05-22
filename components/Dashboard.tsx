@@ -10,17 +10,23 @@ const Dashboard: React.FC<DashboardProps> = ({ links }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const stats = useMemo(() => {
+        const { pending, categoryCounts } = links.reduce(
+            (acc, link) => {
+                if (link.status === LinkStatus.PENDING) {
+                    acc.pending++;
+                }
+                const category = link.category || 'Uncategorized';
+                acc.categoryCounts[category] = (acc.categoryCounts[category] || 0) + 1;
+                return acc;
+            },
+            { pending: 0, categoryCounts: {} as Record<string, number> }
+        );
+
         const total = links.length;
-        const pending = links.filter(l => l.status === LinkStatus.PENDING).length;
         const completed = total - pending;
-        const categoryCounts = links.reduce((acc, link) => {
-            const category = link.category || 'Uncategorized';
-            acc[category] = (acc[category] || 0) + 1;
-            return acc;
-        }, {} as Record<string, number>);
 
         // FIX: Replaced destructuring in sort with index access to fix type inference issues.
-        const sortedCategories = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]);
+        const sortedCategories = Object.entries(categoryCounts).sort((a, b) => (b[1] as number) - (a[1] as number));
 
         return { total, pending, completed, sortedCategories };
     }, [links]);
