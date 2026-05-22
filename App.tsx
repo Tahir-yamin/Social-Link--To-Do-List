@@ -255,15 +255,21 @@ const App: React.FC = () => {
 
 
   const sortedAndFilteredLinks = useMemo(() => {
-    const statusFiltered = filter === 'ALL'
-      ? links
-      : links.filter(link => link.status === filter);
-      
-    const categoryFiltered = categoryFilter === 'ALL'
-      ? statusFiltered
-      : statusFiltered.filter(link => link.category === categoryFilter);
+    let filteredLinks: Link[];
 
-    return [...categoryFiltered].sort((a, b) => {
+    if (filter === 'ALL' && categoryFilter === 'ALL') {
+      filteredLinks = links;
+    } else if (filter === 'ALL') {
+      filteredLinks = links.filter(link => link.category === categoryFilter);
+    } else if (categoryFilter === 'ALL') {
+      filteredLinks = links.filter(link => link.status === filter);
+    } else {
+      filteredLinks = links.filter(
+        (link) => link.status === filter && link.category === categoryFilter
+      );
+    }
+
+    return [...filteredLinks].sort((a, b) => {
       const { key, direction } = sortConfig;
       const order = direction === 'ASC' ? 1 : -1;
 
